@@ -1,0 +1,25 @@
+{
+  "name": "print-app",
+  "version": "0.0.1",
+  "description": "the client app that will be connected to the printers and get the commands from the socket server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@manhnd/esc-pos-encoder": "^1.0.18",
+    "axios": "^1.3.3",
+    "better-sqlite3": "^8.1.0",
+    "form-data": "^4.0.0",
+    "knex": "^2.4.2",
+    "mustache": "^4.2.0",
+    "node-thermal-printer": "^4.2.0",
+    "pdf-to-printer": "^5.5.0",
+    "pdfkit": "^0.13.0",
+    "puppeteer": "^19.7.1",
+    "socket.io-client": "^4.6.0",
+    "unix-print": "^1.2.0"
+  }
+}

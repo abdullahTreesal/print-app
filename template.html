@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html  lang="ar">
+  <head>
+    <meta charset="utf-8" />
+    <style media="all">
+      #invoice-POS {
+        text-align: center;
+        padding: 2mm;
+        margin: auto;
+        width: 290px;
+        background: #fff;
+      }
+  
+      #invoice-POS h1 {
+        
+        color: #222;
+      }
+  
+      #invoice-POS h2 {
+     
+      }
+  
+      #invoice-POS h3 {
+   
+        font-weight: 300;
+        line-height: 2em;
+      }
+  
+      #invoice-POS p {
+       
+        color: #222;
+        line-height: 1.2em;
+        font-weight: bold;
+      }
+  
+      #invoice-POS #top,
+      #invoice-POS #mid,
+      #invoice-POS #bot {
+        /* Targets all id with 'col-' */
+        border-bottom: 1px solid #eee;
+      }
+  
+      #invoice-POS #top {
+        min-height: 55px;
+      }
+  
+      #invoice-POS #mid {
+        min-height: 80px;
+      }
+  
+      #invoice-POS #bot {
+        min-height: 50px;
+      }
+  
+      #invoice-POS #top .logo {
+        height: 60px;
+        width: 170px;
+        background: url(./logo.png) no-repeat;
+        background-size: 170px 40px;
+      }
+  
+      #invoice-POS .clientlogo {
+  
+        height: 60px;
+        width: 170px;
+        background: url(./genral/images/assn-logo-full-1200x238.png) no-repeat;
+        background-size: 170px 40px;
+        border-radius: 50px;
+      }
+  
+  
+      #invoice-POS .title p {
+        text-align: right;
+      }
+  
+      #invoice-POS table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+  
+      #invoice-POS .tabletitle {
+       
+        background: #eee;
+      }
+  
+      #invoice-POS .service {
+        border-bottom: 1px solid #eee;
+      }
+  
+      #invoice-POS .item {
+        width: 24mm;
+      }
+  
+      #invoice-POS .itemtext {
+       
+      }
+  
+      #invoice-POS #legalcopy {
+        text-align: center;
+        margin-top: 5mm;
+      }
+  
+      #printRows tr {
+        text-align: center;
+      }
+  
+      @media print {
+  
+        .hidden-print,
+        .hidden-print * {
+          display: none !important;
+        }
+  
+        #invoice-POS {
+          display: block;
+        }
+  
+        body {
+          -webkit-print-color-adjust: exact;
+          -moz-print-color-adjust: exact;
+          -ms-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="toPrint" style="width:230px; background-color:white;">
+        <div id="invoice-POS">
+    
+          <center id="top">
+            <div class="logo"></div>
+            <p>رقم الطاولة - <span id="printtablenum"></span></p>
+          </center>
+          <!--End InvoiceTop-->
+    
+    
+    
+          <div id="bot">
+    
+            <div id="table" dir="rtl">
+              <table>
+                <thead>
+                  <tr class="tabletitle">
+                    <td class="item" style="width:40%">
+                      <h4>المنتج</h4>
+                    </td>
+                    <td class="Hours">
+                      <h4>الكمية</h4>
+                    </td>
+                    <td class="Rate">
+                      <h4>السعر</h4>
+                    </td>
+                    <td class="Rate">
+                      <h4>المجموع</h4>
+                    </td>
+                  </tr>
+                </thead>
+    
+                <tbody id="printRows">
+    
+                </tbody>
+    
+    
+    
+                <tr class="tabletitle">
+                  <td></td>
+                  <td></td>
+                  <td class="Rate">
+                    <h4>المجموع الكلي</h4>
+                  </td>
+                  <td class="payment">
+                    <h4>
+                      <span id="totalOfPrint">0</span>
+                      ₪
+                    </h4>
+                  </td>
+                </tr>
+    
+              </table>
+            </div>
+            <!--End Table-->
+    
+            <div id="legalcopy">
+              <p class="legal">
+                شكرا لزيارتك
+              </p>
+            </div>
+    
+          </div>
+          <!--End InvoiceBot-->
+        </div>
+        <!--End Invoice-->
+    
+      </div>
+    
+  </body>
+
+  <script>
+    function addRowToInvoice(name,price,quantity,total)
+{
+
+    let row = `
+    <tr class="service">
+    <td class="tableitem" style="width:40%"><p class="itemtext">${name}</p></td>
+    <td class="tableitem"><p class="itemtext">${quantity}</p></td>
+    <td class="tableitem"><p class="itemtext">${price}₪</p></td>
+ 
+    <td class="tableitem"><p class="itemtext">${total}₪</p></td>
+</tr>
+    `
+
+    document.getElementById("printRows").innerHTML += row
+
+    let s = parseFloat(document.getElementById("totalOfPrint").innerHTML)
+    s = s + parseFloat(total)
+    document.getElementById("totalOfPrint").innerHTML = s.toFixed(2)
+    
+}
+
+function clearInvoice()
+{
+    document.getElementById("printRows").innerHTML = ""
+    document.getElementById("totalOfPrint").innerHTML = 0
+}
+
+
+  </script>
+</html>

@@ -8,7 +8,7 @@ const fs = require("fs")
 
 
 
-const socket = io("http://localhost:3000/printers");
+const socket = io("http://18.159.24.86:3000/printers");
 const windowsPrinter = require("pdf-to-printer") ;
 const unixPrinter = require("unix-print") ;
 const tableName = "printOrders"
@@ -20,7 +20,9 @@ const knex = require('knex')({
     useNullAsDefault: true
   });
 socket.connect()
-
+socket.on("connect_error", (err) => {
+    console.log(`connect_error due to ${err.message}`);
+  });
 socket.on("printOnPrinter",async(order,callback)=>{
 
     let orderId = order.orderId

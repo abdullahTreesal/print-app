@@ -8,7 +8,7 @@ const fs = require("fs")
 
 
 
-const socket = io("http://18.159.24.86:3000/printers");
+const socket = io("https://printer.assn.ps/printers");
 const windowsPrinter = require("pdf-to-printer") ;
 const unixPrinter = require("unix-print") ;
 const tableName = "printOrders"

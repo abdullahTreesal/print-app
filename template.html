@@ -201,20 +201,21 @@
     function addRowToInvoice(name,price,quantity,total)
 {
 
+  let newTotal = parseFloat(quantity) * parseFloat(price)
     let row = `
     <tr class="service">
     <td class="tableitem" style="width:40%"><p class="itemtext">${name}</p></td>
-    <td class="tableitem"><p class="itemtext">${quantity}</p></td>
-    <td class="tableitem"><p class="itemtext">${price}₪</p></td>
+    <td class="tableitem"><p class="itemtext">${parseFloat(quantity).toFixed(2)}</p></td>
+    <td class="tableitem"><p class="itemtext">${parseFloat(price).toFixed(2)}₪</p></td>
  
-    <td class="tableitem"><p class="itemtext">${total}₪</p></td>
+    <td class="tableitem"><p class="itemtext">${newTotal.toFixed(2)}₪</p></td>
 </tr>
     `
 
     document.getElementById("printRows").innerHTML += row
 
     let s = parseFloat(document.getElementById("totalOfPrint").innerHTML)
-    s = s + parseFloat(total)
+    s = s + parseFloat(newTotal)
     document.getElementById("totalOfPrint").innerHTML = s.toFixed(2)
     
 }

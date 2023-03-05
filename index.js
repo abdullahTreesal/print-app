@@ -5,6 +5,7 @@ const puppeteer = require('puppeteer');
 
 const fs = require("fs")
 
+const path= require('path');
 
 
 
@@ -23,7 +24,7 @@ socket.connect()
 socket.on("connect_error", (err) => {
     console.log(`connect_error due to ${err.message}`);
   });
-socket.on("printOnPrinter",async(order,callback)=>{
+socket.on("printOnPrinter",async(order,callback)=>{  
 
     let orderId = order.orderId
     let s = await knex.select("orderId").from(tableName).where("orderId",orderId)
@@ -40,7 +41,7 @@ socket.on("printOnPrinter",async(order,callback)=>{
     await knex.insert(order).into(tableName)
     try
     {
-        let printResult = await printFile(order.order)
+        let printResult = await printFile(order.order,order.tablenum)
         console.log("order printed succsfuly")
         await knex(tableName).update("status","completed").where("orderId",order.orderId)
 
@@ -74,8 +75,9 @@ function sendPrintCompletedEvent(orderId)
     })
 }
 
-
-async function printFile(order)
+let templatePath =  path.join(__dirname, 'template.html');
+console.log(templatePath)
+async function printFile(order,tablenum)
 {
     let todayDate ="./pdfs/"+ getDate(0)
     let yesterdayDate = "./pdfs/"+ getDate(1)
@@ -93,11 +95,13 @@ async function printFile(order)
 
     // Create a new page
     const page = await browser.newPage();
-    await page.goto("file:///Users/asaadedd/workspace/print-app/template.html", { waitUntil: 'networkidle0' });
+    var contentHtml = fs.readFileSync(templatePath, 'utf8');
+    await page.setContent(contentHtml, { waitUntil: 'networkidle0' });
     await page.emulateMediaType('screen');
     
     
-      const someFunctionReturnedValue = await page.evaluate((order) => {
+      const someFunctionReturnedValue = await page.evaluate((order,tablenum) => {
+        document.getElementById("printtablenum").innerHTML =tablenum
         order.forEach(item=>{
             addRowToInvoice(item.product.name,item.product.price,item.values.newQuantity,item.product.price,item.values.newPrice)
         })
@@ -105,10 +109,10 @@ async function printFile(order)
         let w = parseInt(document.getElementById("invoice-POS").offsetWidth *0.26) 
         console.log(h)
         return [w+"mm",h+"mm",w,h]
-     },order);
+     },order,tablenum);
     
       boxes2 = someFunctionReturnedValue;
-      console.log(boxes2)
+      console.log(boxes2) 
     const pdf = await page.pdf({
         path: fileName,
         margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
@@ -121,7 +125,10 @@ async function printFile(order)
     
       if(isWin)
       {
-        //   return  windowsPrinter.print(fileName,"XPrinter XP-80")
+        const options = {
+            printer: "Order"
+          };
+      return  windowsPrinter.print(fileName,options)
       }
       else{
     
@@ -148,7 +155,7 @@ setInterval(async()=>{
         try
         {
         
-            let printResult = await printFile(order.order)
+            let printResult = await printFile(order.order,order.tablenum)
             console.log("order printed succsfuly")
             await knex(tableName).update("status","completed").where("orderId",order.orderId)
             sendPrintCompletedEvent(order.orderId)
